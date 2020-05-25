@@ -377,7 +377,7 @@ var getRemoteAsset = function getRemoteAsset(url, callback) {
  * @param {number} width - width of output map (default: 1024)
  * @param {number} height - height of output map (default: 1024)
  * @param {Object} - configuration object containing style, zoom, center: [lng, lat],
- * width, height, bounds: [west, south, east, north], ratio, padding
+ * width, height, bounds: [west, south, east, north], ratio, padding, skipEncoding
  * @param {String} tilePath - path to directory containing local mbtiles files that are
  * referenced from the style.json as "mbtiles://<tileset>"
  */
@@ -399,7 +399,9 @@ var render = function render(style) {
         _options$ratio = options.ratio,
         ratio = _options$ratio === void 0 ? 1 : _options$ratio,
         _options$padding = options.padding,
-        padding = _options$padding === void 0 ? 0 : _options$padding;
+        padding = _options$padding === void 0 ? 0 : _options$padding,
+        _options$skipEncoding = options.skipEncoding,
+        skipEncoding = _options$skipEncoding === void 0 ? false : _options$skipEncoding;
     var _options$center = options.center,
         center = _options$center === void 0 ? null : _options$center,
         _options$zoom = options.zoom,
@@ -621,6 +623,10 @@ var render = function render(style) {
           buffer[i + 1] = buffer[i + 1] / norm;
           buffer[i + 2] = buffer[i + 2] / norm;
         }
+      }
+
+      if (skipEncoding) {
+        return resolve(buffer);
       } // Convert raw image buffer to PNG
 
 

@@ -320,7 +320,7 @@ const getRemoteAsset = (url, callback) => {
  * @param {number} width - width of output map (default: 1024)
  * @param {number} height - height of output map (default: 1024)
  * @param {Object} - configuration object containing style, zoom, center: [lng, lat],
- * width, height, bounds: [west, south, east, north], ratio, padding
+ * width, height, bounds: [west, south, east, north], ratio, padding, skipEncoding
  * @param {String} tilePath - path to directory containing local mbtiles files that are
  * referenced from the style.json as "mbtiles://<tileset>"
  */
@@ -333,6 +333,7 @@ export const render = (style, width = 1024, height = 1024, options) =>
             token = null,
             ratio = 1,
             padding = 0,
+            skipEncoding = false,
         } = options
         let { center = null, zoom = null, tilePath = null } = options
 
@@ -587,6 +588,10 @@ export const render = (style, width = 1024, height = 1024, options) =>
                         buffer[i + 1] = buffer[i + 1] / norm
                         buffer[i + 2] = buffer[i + 2] / norm
                     }
+                }
+
+                if (skipEncoding) {
+                    return resolve(buffer)
                 }
 
                 // Convert raw image buffer to PNG
