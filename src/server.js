@@ -28,6 +28,7 @@ const PARAMS = {
     bearing: { isRequired: false, isDecimal: true },
     pitch: { isRequired: false, isDecimal: true },
     token: { isRequired: false, isString: true },
+    pngOptions: { isRequired: false, isObject: true },
 }
 
 const renderImage = (params, response, next, tilePath) => {
@@ -38,6 +39,7 @@ const renderImage = (params, response, next, tilePath) => {
         padding = 0,
         bearing = null,
         pitch = null,
+        pngOptions,
     } = params
     let { style, zoom = null, center = null, bounds = null, ratio = 1 } = params
 
@@ -206,6 +208,7 @@ const renderImage = (params, response, next, tilePath) => {
             bearing,
             pitch,
             token,
+            pngOptions,
         })
             .then((data, rejected) => {
                 if (rejected) {

@@ -77,6 +77,10 @@ var PARAMS = {
   token: {
     isRequired: false,
     isString: true
+  },
+  pngOptions: {
+    isRequired: false,
+    isObject: true
   }
 };
 
@@ -90,7 +94,8 @@ var renderImage = function renderImage(params, response, next, tilePath) {
       _params$bearing = params.bearing,
       bearing = _params$bearing === void 0 ? null : _params$bearing,
       _params$pitch = params.pitch,
-      pitch = _params$pitch === void 0 ? null : _params$pitch;
+      pitch = _params$pitch === void 0 ? null : _params$pitch,
+      pngOptions = params.pngOptions;
   var style = params.style,
       _params$zoom = params.zoom,
       zoom = _params$zoom === void 0 ? null : _params$zoom,
@@ -235,7 +240,8 @@ var renderImage = function renderImage(params, response, next, tilePath) {
       ratio: ratio,
       bearing: bearing,
       pitch: pitch,
-      token: token
+      token: token,
+      pngOptions: pngOptions
     }).then(function (data, rejected) {
       if (rejected) {
         console.error('render request rejected', rejected);

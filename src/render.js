@@ -320,7 +320,8 @@ const getRemoteAsset = (url, callback) => {
  * @param {number} width - width of output map (default: 1024)
  * @param {number} height - height of output map (default: 1024)
  * @param {Object} - configuration object containing style, zoom, center: [lng, lat],
- * width, height, bounds: [west, south, east, north], ratio, padding, skipEncoding
+ * width, height, bounds: [west, south, east, north], ratio, padding, skipEncoding,
+ * preRenderFn, pngOptions
  * @param {String} tilePath - path to directory containing local mbtiles files that are
  * referenced from the style.json as "mbtiles://<tileset>"
  */
@@ -334,6 +335,8 @@ export const render = (style, width = 1024, height = 1024, options) =>
             ratio = 1,
             padding = 0,
             skipEncoding = false,
+            preRenderFn = null,
+            pngOptions,
         } = options
         let { center = null, zoom = null, tilePath = null } = options
 
@@ -553,6 +556,10 @@ export const render = (style, width = 1024, height = 1024, options) =>
         const map = new mbgl.Map(mapOptions)
         map.load(style)
 
+        if (typeof preRenderFn === 'function') {
+            preRenderFn(map)
+        }
+
         map.render(
             {
                 zoom,
@@ -603,7 +610,7 @@ export const render = (style, width = 1024, height = 1024, options) =>
                             channels: 4,
                         },
                     })
-                        .png()
+                        .png(pngOptions)
                         .toBuffer()
                         .then(resolve)
                         .catch(reject)

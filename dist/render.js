@@ -377,7 +377,8 @@ var getRemoteAsset = function getRemoteAsset(url, callback) {
  * @param {number} width - width of output map (default: 1024)
  * @param {number} height - height of output map (default: 1024)
  * @param {Object} - configuration object containing style, zoom, center: [lng, lat],
- * width, height, bounds: [west, south, east, north], ratio, padding, skipEncoding
+ * width, height, bounds: [west, south, east, north], ratio, padding, skipEncoding,
+ * preRenderFn, pngOptions
  * @param {String} tilePath - path to directory containing local mbtiles files that are
  * referenced from the style.json as "mbtiles://<tileset>"
  */
@@ -401,7 +402,10 @@ var render = function render(style) {
         _options$padding = options.padding,
         padding = _options$padding === void 0 ? 0 : _options$padding,
         _options$skipEncoding = options.skipEncoding,
-        skipEncoding = _options$skipEncoding === void 0 ? false : _options$skipEncoding;
+        skipEncoding = _options$skipEncoding === void 0 ? false : _options$skipEncoding,
+        _options$preRenderFn = options.preRenderFn,
+        preRenderFn = _options$preRenderFn === void 0 ? null : _options$preRenderFn,
+        pngOptions = options.pngOptions;
     var _options$center = options.center,
         center = _options$center === void 0 ? null : _options$center,
         _options$zoom = options.zoom,
@@ -589,6 +593,11 @@ var render = function render(style) {
     };
     var map = new _mapboxGlNative["default"].Map(mapOptions);
     map.load(style);
+
+    if (typeof preRenderFn === 'function') {
+      preRenderFn(map);
+    }
+
     map.render({
       zoom: zoom,
       center: center,
@@ -637,7 +646,7 @@ var render = function render(style) {
             height: height * ratio,
             channels: 4
           }
-        }).png().toBuffer().then(resolve)["catch"](reject);
+        }).png(pngOptions).toBuffer().then(resolve)["catch"](reject);
       } catch (pngErr) {
         console.error('Error encoding PNG');
         console.error(pngErr);
